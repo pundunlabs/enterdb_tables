@@ -1,0 +1,9 @@
+{application, enterdb_tables,
+ [{description, "Enterdb tables"},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {applications, [kernel, stdlib, gb_conf, gb_log, gb_hash, gb_dyno]},
+  {mod, {enterdb_tables_app,[]}}
+ ]}.
+
