@@ -45,9 +45,9 @@ stop(_State) ->
 %%--------------------------------------------------------------------
 -spec open_all_tables() -> ok | {error, Reason :: term()}.
 open_all_tables() ->
-    case enterdb_db:transaction(fun() -> mnesia:all_keys(enterdb_stab) end) of
-	{atomic, DBList} ->
-	    enterdb_lib:open_shards(DBList),
+    case enterdb_db:transaction(fun() -> mnesia:all_keys(enterdb_table) end) of
+	{atomic, TableList} ->
+	    lists:foreach(fun enterdb_lib:do_open_table/1, TableList),
 	    enterdb_tables_sup:start_link();
 	{error, Reason} ->
 	    {error, Reason}
