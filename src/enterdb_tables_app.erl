@@ -47,10 +47,15 @@ stop(_State) ->
 open_all_tables() ->
     case enterdb_db:transaction(fun() -> mnesia:all_keys(enterdb_table) end) of
 	{atomic, TableList} ->
-	    lists:foreach(fun enterdb_lib:do_open_table/1, TableList),
+	    lists:foreach(fun open_table/1, TableList),
 	    enterdb_tables_sup:start_link();
 	{error, Reason} ->
 	    {error, Reason}
     end.
-
-
+open_table(Table) ->
+    try
+	enterdb_lib:do_open_table(Table)
+    catch C:E ->
+	?warning("could not open table ~p ~p:~p ~p",
+	    [Table, C, E, erlang:get_stacktrace()])
+    end.
